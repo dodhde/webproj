@@ -68,7 +68,6 @@ app.post('/writesub', (req, res) => {
       console.log('글 등록', new Date().toLocaleString());
       res.send("<script>alert('글이 등록되었습니다'); location.href='/'</script>");
     });
-  });
 });
 
 
