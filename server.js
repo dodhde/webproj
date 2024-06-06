@@ -25,22 +25,22 @@ app.use(express.json());
 
 
 app.get('/', (req, res) => {
+  pool.getConnection((err, connection) => {
+    if (err) {
+      console.error('Error: ' + err.stack);
+      return res.status(500).send('Error');
+    }
+
     const sql = 'SELECT * FROM writesub';
     connection.query(sql, (err, results) => {
-        if (err) {
-            console.error('Error: ' + err.stack);
-            return res.status(500).send('Error');
-        }
-        const sql = 'SELECT * FROM writesub';
-        connection.query(sql, (err, results) => {
-          connection.release();
-          if (err) {
-            console.error('Error: ' + err.stack);
-            return res.status(500).send('Error');
-          }
-          res.render('index', { posts: results });
-        });
+      connection.release();
+      if (err) {
+        console.error('Error: ' + err.stack);
+        return res.status(500).send('Error');
+      }
+      res.render('index', { posts: results });
     });
+  });
 });
 
 app.get('/write', function(req, res){
