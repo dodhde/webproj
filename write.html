@@ -1,0 +1,71 @@
+<!-- <!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>레시피 작성</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 20px;
+        }
+        .step {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mb-4">레시피 작성</h1>
+        <form id="recipe-form" action="submit_recipe.php" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="title" class="form-label">제목</label>
+                <input type="text" class="form-control" id="title" name="title" required>
+            </div>
+            <div class="mb-3">
+                <label for="ingredients" class="form-label">재료</label>
+                <textarea class="form-control" id="ingredients" name="ingredients" rows="5" required></textarea>
+            </div>
+            <div id="steps">
+                <div class="step" id="step-1">
+                    <label for="step-1" class="form-label">단계 1</label>
+                    <textarea class="form-control" id="step-1" name="steps[]" rows="3" required></textarea>
+                    <label for="step-image-1" class="form-label mt-2">사진 업로드</label>
+                    <input type="file" class="form-control" id="step-image-1" name="step_images[]" accept="image/*" required>
+                </div>
+            </div>
+            <button type="button" class="btn btn-secondary mb-3" onclick="addStep()">단계 추가</button>
+            <button type="button" class="btn btn-danger mb-3" onclick="removeStep()">마지막 단계 삭제</button>
+            <button type="submit" class="btn btn-primary">레시피 제출</button>
+        </form>
+    </div>
+
+    <script>
+        let stepCount = 1;
+
+        function addStep() {
+            stepCount++;
+            const stepDiv = document.createElement('div');
+            stepDiv.classList.add('step');
+            stepDiv.id = `step-${stepCount}`;
+            stepDiv.innerHTML = `
+                <label for="step-${stepCount}" class="form-label">단계 ${stepCount}</label>
+                <textarea class="form-control" id="step-${stepCount}" name="steps[]" rows="3" required></textarea>
+                <label for="step-image-${stepCount}" class="form-label mt-2">사진 업로드</label>
+                <input type="file" class="form-control" id="step-image-${stepCount}" name="step_images[]" accept="image/*" required>
+            `;
+            document.getElementById('steps').appendChild(stepDiv);
+        }
+
+        function removeStep() {
+            if (stepCount > 1) {
+                const lastStep = document.getElementById(`step-${stepCount}`);
+                lastStep.parentNode.removeChild(lastStep);
+                stepCount--;
+            }
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> -->
