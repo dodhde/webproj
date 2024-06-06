@@ -40,7 +40,7 @@ app.get('/', async (req, res) => {
 
 app.get('/write', function(req, res){
     res.render('write.ejs')    
-}
+})
 
 app.post('/writesub', async (req, res) => {
   const { name, password, ingredients, title, content } = req.body;
