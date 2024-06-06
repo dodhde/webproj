@@ -59,6 +59,13 @@ app.post('/writesub', (req, res) => {
     const content = req.body.content; 
 
     const sql = `INSERT INTO writesub (name, password, ingredients, title, content, regdate) VALUES (?, ?, ?, ?, ?, NOW())`;
+  
+    pool.getConnection((err, connection) => {
+    if (err) {
+      console.error('Error: ' + err.stack);
+      return res.status(500).send('Error');
+    }
+
     connection.query(sql, [name, password, ingredients, title, content], (err, result) => {
       connection.release();
       if (err) {
@@ -68,7 +75,7 @@ app.post('/writesub', (req, res) => {
       console.log('글 등록', new Date().toLocaleString());
       res.send("<script>alert('글이 등록되었습니다'); location.href='/'</script>");
     });
-});
+  });
 
 
 app.listen(port, '0.0.0.0', () => {
