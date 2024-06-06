@@ -76,7 +76,7 @@ app.post('/writesub', (req, res) => {
       res.send("<script>alert('글이 등록되었습니다'); location.href='/'</script>");
     });
   });
-
+});
 
 app.listen(port, '0.0.0.0', () => {
     console.log(`Server running at http://0.0.0.0:${port}/`);
