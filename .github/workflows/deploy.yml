@@ -34,7 +34,7 @@ jobs:
                 - name: DB_USERNAME
                   value: root
                 - name: DB_PASSWORD
-                  secret: mariadb-root-password
+                  secret: dbpassword
                 - name: DB_NAME
                   value: dodhdweb
               ports: "8002"
