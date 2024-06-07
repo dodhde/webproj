@@ -54,7 +54,7 @@
             <% if (posts.length > 0) { %>
                 <% posts.forEach(post => { %>
                     <div class="col-md-4">
-                        <div class="card mb-4" onclick="location.href='/'">
+                        <div class="card mb-4" onclick="location.href='/posts/view/<%= post.id %>'">
                             <img src="<%= post.image ? post.image : 'https://via.placeholder.com/300' %>" class="card-img-top" alt="<%= post.title %>">
                             <div class="card-body">
                                 <h5 class="card-title">
