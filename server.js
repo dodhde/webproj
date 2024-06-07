@@ -5,7 +5,6 @@ const port = 8002;
 const bodyParser = require('body-parser');
 const mariadb = require('mariadb');
 
-require('dotenv').config();
 
 const pool = mariadb.createPool({
   host: process.env.DB_HOST,
