@@ -36,7 +36,7 @@ jobs:
                 - name: DB_PASSWORD
                   secret: dbpassword
                 - name: DB_NAME
-                  value: dodhdweb
+                  value: dodhddb
               ports: "8002"
               install: npm ci --production
               start: node server.js
