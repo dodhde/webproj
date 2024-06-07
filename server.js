@@ -35,6 +35,66 @@ app.get('/', async (req, res) => {
   }
 });
 
+
+app.get('/posts', async (req, res) => {
+  let connection;
+  try {
+      connection = await pool.getConnection();
+      const rows = await connection.query('SELECT * FROM writesub ORDER BY regdate DESC');
+      res.json(rows);
+  } catch (err) {
+      console.error(err);
+      res.status(500).send('Internal Server Error');
+  } finally {
+      if (connection) connection.end();
+  }
+});
+
+// 글 조회
+app.get('/posts/view/:id', async (req, res) => {
+  const postId = req.params.id;
+  let connection;
+  try {
+      connection = await pool.getConnection();
+      const row = await connection.query('SELECT * FROM writesub WHERE id = ?', [postId]);
+      if (row.length > 0) {
+          res.render('post', { post: row[0] });
+      } else {
+          res.status(404).send('Post Not Found');
+      }
+  } catch (err) {
+      console.error(err);
+      res.status(500).send('Internal Server Error');
+  } finally {
+      if (connection) connection.end();
+  }
+});
+
+// 글 삭제
+app.post('/posts/delete/:id', async (req, res) => {
+  const postId = req.params.id;
+  const inputPassword = req.body.password;
+  let connection;
+  try {
+      connection = await pool.getConnection();
+      const row = await connection.query('SELECT password FROM writesub WHERE id = ?', [postId]);
+      if (row.length > 0 && row[0].password === inputPassword) {
+          await connection.query('DELETE FROM writesub WHERE id = ?', [postId]);
+          res.redirect('/');
+      } else {
+          res.status(401).send('비밀번호 틀림!');
+      }
+  } catch (err) {
+      console.error(err);
+      res.status(500).send('Internal Server Error');
+  } finally {
+      if (connection) connection.end();
+  }
+});
+
+
+
+
 app.get('/write', function(req, res){
     res.render('write.ejs')    
 })
