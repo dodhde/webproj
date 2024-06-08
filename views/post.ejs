@@ -28,22 +28,33 @@
             height: 500px;
             width: 100%;
         }
-        .back-link {
+        .deletepost {
+            width: 300px;
+            margin-left: 10px; 
+        }
+        .backdel {
+            float: right;
             display: flex;
             align-items: center;
             margin-top: 20px;
         }
-        .delete-post {
-            width: 300px;
-            margin-left: 10px; 
+        #recom {
+            margin-top: 10px;
+            width: 100px; 
+            height: 60px;
+            margin-left: auto;
+            margin-right: auto;
         }
-        .input-group .form-control {
-            border-top-left-radius: 0.25rem;
-            border-bottom-left-radius: 0.25rem;
+        #recomcount {
+            font-size: 16px;
+            font-family: sans-serif;
+            font-weight: bold;
         }
-        .input-group .btn {
-            border-top-right-radius: 0.25rem;
-            border-bottom-right-radius: 0.25rem;
+        #recombtn {
+            padding-top: 20px;
+            display: flex;
+            justify-content: center;
+            height: 100%;
         }
     </style>
 </head>
@@ -51,11 +62,18 @@
 
     <%-include('header.ejs')%>
 
+    
 
     <div class="container">
         <div class="card">
             <div class="card-header">
-                <h1><%= post.title %></h1>
+                <h3>
+                    <%= post.category === '0' ? '🍚' : 
+                        post.category === '1' ? '🥢' : 
+                        post.category === '2' ? '🍣' : 
+                        post.category === '3' ? '🍝' : '🍱' %> 
+                    <%= post.title %>
+                </h3>
             </div>
             <div class="card-body">
                 <p class="card-text">작성자: <strong><%= post.name %></strong>
@@ -63,11 +81,18 @@
                 <p class="card-text">필요 재료: <%= post.ingredients %></p><hr>
                 <div><br><p class="card-text"><%= post.content %></p><br></div>
             </div>
-        </div><br>
-        <div class="back-link">
+        </div>
+        <div id="recom" class="card">
+            <div id="recombtn">
+                <img src="https://cdn-icons-png.flaticon.com/512/833/833472.png" alt="recom" style="width: 25px;
+                height: 25px; margin-right: 10px;">|
+                <span id="recomcount" style="margin-left: 10px;"><%= post.recom %></span>
+            </div>
+        </div>
+        <div class="backdel">
             <a href="/" class="btn" style="background-color: #FFDAB9;">목록으로 돌아가기</a>
-            <div class="delete-post">
-                <form action="/posts/delete/<%= post.id %>" method="POST" class="d-flex align-items-center">
+            <div class="deletepost">
+                <form action="/posts/delete/<%= post.id %>" method="POST">
                     <div class="input-group">
                         <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호" width="50px">
                         <button type="submit" class="btn " style="background-color: #FFDAB9;">삭제</button>
@@ -77,9 +102,11 @@
         </div>
     </div>
     <div class="backimg"></div>
+    
 
     <%-include('footer.ejs')%>
 
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
