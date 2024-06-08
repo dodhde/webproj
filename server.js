@@ -5,6 +5,7 @@ const port = 8002;
 const bodyParser = require('body-parser');
 const mariadb = require('mariadb');
 
+require('dotenv').config();
 
 const pool = mariadb.createPool({
   host: process.env.DB_HOST,
@@ -44,7 +45,7 @@ app.get('/posts', async (req, res) => {
       res.json(rows);
   } catch (err) {
       console.error(err);
-      res.status(500).send('Internal Server Error');
+      res.status(500).send('서버 오류');
   } finally {
       if (connection) connection.end();
   }
@@ -60,11 +61,11 @@ app.get('/posts/view/:id', async (req, res) => {
       if (row.length > 0) {
           res.render('post', { post: row[0] });
       } else {
-          res.status(404).send('Post Not Found');
+          res.status(404).send('글을 찾을 수 없습니다.');
       }
   } catch (err) {
       console.error(err);
-      res.status(500).send('Internal Server Error');
+      res.status(500).send('서버 오류');
   } finally {
       if (connection) connection.end();
   }
@@ -98,15 +99,18 @@ app.post('/posts/delete/:id', async (req, res) => {
 app.get('/write', function(req, res){
     res.render('write.ejs')    
 })
+app.get('/temp', function(req, res){
+  res.render('temp.ejs')    
+})
 
 app.post('/writesub', async (req, res) => {
-  const { name, password, ingredients, title, content } = req.body;
+  const { name, password, ingredients, title, content, category } = req.body;
 
-  const sql = `INSERT INTO writesub (name, password, ingredients, title, content, regdate) VALUES (?, ?, ?, ?, ?, NOW())`;
+  const sql = `INSERT INTO writesub (name, password, ingredients, title, content, category, regdate) VALUES (?, ?, ?, ?, ?, ?, NOW())`;
   let conn;
   try {
     conn = await pool.getConnection();
-    await conn.query(sql, [name, password, ingredients, title, content]);
+    await conn.query(sql, [name, password, ingredients, title, content, category]);
     console.log('글 등록', new Date().toLocaleString());
     res.send("<script>alert('글이 등록되었습니다'); location.href='/'</script>");
   } catch (err) {
