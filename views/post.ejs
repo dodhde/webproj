@@ -79,7 +79,7 @@
                 <p class="card-text">작성자: <strong><%= post.name %></strong>
                     <small class="text-muted" style="float: right;"><%= post.regdate %></small></p>
                 <p class="card-text">필요 재료: <%= post.ingredients %></p><hr>
-                <div><br><p class="card-text"><%= post.content %></p><br></div>
+                <div><br><p class="card-text"><%- post.content.replace(/\n/g, '<br>') %></p><br></div>
             </div>
         </div>
         <div id="recom" class="card">
