@@ -25,7 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 
-
+// 메인 화면
 app.get('/', async (req, res) => {
   let conn;
   try {
@@ -51,6 +51,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 app.use('/uploads', express.static('uploads'));
 
+// 게시글
 app.get('/posts', async (req, res) => {
   let connection;
   try {
@@ -138,6 +139,23 @@ app.post('/writesub', upload.single('contentimg'), async (req, res) => {
   } catch (err) {
     console.error('Error: ' + err.stack);
     res.status(500).send('Error');
+  } finally {
+    if (conn) conn.release();
+  }
+});
+
+// 추천
+app.post('/recommend/:id', async (req, res) => {
+  const postId = req.params.id;
+  const sql = `UPDATE writesub SET recom = recom + 1 WHERE id = ?`;
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    await conn.query(sql, [postId]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Error: ' + err.stack);
+    res.status(500).json({ success: false, error: 'DB error' });
   } finally {
     if (conn) conn.release();
   }
