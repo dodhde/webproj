@@ -87,10 +87,10 @@
             </div>
         </div>
         <div id="recom" class="card">
-            <div id="recombtn">
+            <div id="recombtn" onclick="handleRecommend(<%= post.id %>)">
                 <img src="https://cdn-icons-png.flaticon.com/512/833/833472.png" alt="recom" style="width: 25px;
                 height: 25px; margin-right: 10px;">|
-                <span id="recomcount" style="margin-left: 10px;">0</span>
+                <span id="recomcount" style="margin-left: 10px;"><%= post.recom %></span>
             </div>
         </div>
         <div class="backdel">
@@ -110,56 +110,39 @@
 
     <%-include('footer.ejs')%>
 
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 
     <script>
-        const postId = 'unique-post-id'; 
-    
-        document.addEventListener('DOMContentLoaded', function() {
-            const recomCountElement = document.getElementById('recomcount');
-            const storedRecomCount = localStorage.getItem(`${postId}-count`);
-    
-            if (storedRecomCount !== null) {
-                recomCountElement.textContent = storedRecomCount;
+        function handleRecommend(postId) {
+          if (localStorage.getItem('recommended_' + postId)) {
+            alert('이미 추천을 한 게시글입니다.');
+            return;
+          }
+      
+          fetch('/recommend/' + postId, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
             }
-        });
-    
-        document.getElementById('recombtn').addEventListener('click', function() {
-            const recomCountElement = document.getElementById('recomcount');
-    
-            const alreadyRecommended = localStorage.getItem(postId) === 'true';
-    
-            let recomCount = parseInt(recomCountElement.textContent, 10);
-    
-            if (alreadyRecommended) {
-                if (recomCount > 0) {
-                    recomCount--;
-                    localStorage.setItem(postId, 'false');
-                    alert('추천을 취소하셨습니다.');
-                } else {
-                    alert('추천 수는 0보다 작을 수 없습니다.');
-                }
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              const recomCountElem = document.getElementById('recomcount');
+              const newCount = parseInt(recomCountElem.innerText) + 1;
+              recomCountElem.innerText = newCount;
+              localStorage.setItem('recommended_' + postId, true);
             } else {
-                recomCount++;
-                localStorage.setItem(postId, 'true');
-                alert('추천하셨습니다.');
+              alert('다시 시도해 주세요.');
             }
-    
-            recomCountElement.textContent = recomCount;
-            localStorage.setItem(`${postId}-count`, recomCount);
-        });
-    
-        document.getElementById('resetbtn').addEventListener('click', function() {
-            const recomCountElement = document.getElementById('recomcount');
-            
-            recomCountElement.textContent = '0';
-            localStorage.setItem(postId, 'false');
-            localStorage.setItem(`${postId}-count`, '0');
-            
-            alert('추천 수가 리셋되었습니다.');
-        });
-    </script>
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            alert('다시 시도해 주세요.');
+          });
+        }
+      </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     
 
 </body>
