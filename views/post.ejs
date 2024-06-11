@@ -79,14 +79,18 @@
                 <p class="card-text">작성자: <strong><%= post.name %></strong>
                     <small class="text-muted" style="float: right;"><%= post.regdate %></small></p>
                 <p class="card-text">필요 재료: <%= post.ingredients %></p><hr>
-                <div><br><p class="card-text"><%- post.content.replace(/\n/g, '<br>') %></p><br></div>
+                <div><br>
+                    <p><% if (post.imgpath) { %>
+                        <img src="/<%= post.imgpath %>" alt="Post Image" style="max-width: 25%;">
+                      <% } %></p>
+                    <p class="card-text"><%- post.content.replace(/\n/g, '<br>') %></p><br></div>
             </div>
         </div>
         <div id="recom" class="card">
             <div id="recombtn">
                 <img src="https://cdn-icons-png.flaticon.com/512/833/833472.png" alt="recom" style="width: 25px;
                 height: 25px; margin-right: 10px;">|
-                <span id="recomcount" style="margin-left: 10px;"><%= post.recom %></span>
+                <span id="recomcount" style="margin-left: 10px;">0</span>
             </div>
         </div>
         <div class="backdel">
@@ -108,5 +112,55 @@
 
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const postId = 'unique-post-id'; 
+    
+        document.addEventListener('DOMContentLoaded', function() {
+            const recomCountElement = document.getElementById('recomcount');
+            const storedRecomCount = localStorage.getItem(`${postId}-count`);
+    
+            if (storedRecomCount !== null) {
+                recomCountElement.textContent = storedRecomCount;
+            }
+        });
+    
+        document.getElementById('recombtn').addEventListener('click', function() {
+            const recomCountElement = document.getElementById('recomcount');
+    
+            const alreadyRecommended = localStorage.getItem(postId) === 'true';
+    
+            let recomCount = parseInt(recomCountElement.textContent, 10);
+    
+            if (alreadyRecommended) {
+                if (recomCount > 0) {
+                    recomCount--;
+                    localStorage.setItem(postId, 'false');
+                    alert('추천을 취소하셨습니다.');
+                } else {
+                    alert('추천 수는 0보다 작을 수 없습니다.');
+                }
+            } else {
+                recomCount++;
+                localStorage.setItem(postId, 'true');
+                alert('추천하셨습니다.');
+            }
+    
+            recomCountElement.textContent = recomCount;
+            localStorage.setItem(`${postId}-count`, recomCount);
+        });
+    
+        document.getElementById('resetbtn').addEventListener('click', function() {
+            const recomCountElement = document.getElementById('recomcount');
+            
+            recomCountElement.textContent = '0';
+            localStorage.setItem(postId, 'false');
+            localStorage.setItem(`${postId}-count`, '0');
+            
+            alert('추천 수가 리셋되었습니다.');
+        });
+    </script>
+    
+
 </body>
 </html>
