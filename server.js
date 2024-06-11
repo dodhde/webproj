@@ -4,6 +4,8 @@ const app = express();
 const port = 8002;
 const bodyParser = require('body-parser');
 const mariadb = require('mariadb');
+const multer = require('multer');
+const path = require('path');
 
 require('dotenv').config();
 
@@ -19,6 +21,8 @@ app.set('view engine', 'ejs')
 app.set('views', './views')
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
 
 
 
@@ -36,6 +40,16 @@ app.get('/', async (req, res) => {
   }
 });
 
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
+});
+const upload = multer({ storage: storage });
+app.use('/uploads', express.static('uploads'));
 
 app.get('/posts', async (req, res) => {
   let connection;
@@ -103,14 +117,22 @@ app.get('/temp', function(req, res){
   res.render('temp.ejs')    
 })
 
-app.post('/writesub', async (req, res) => {
-  const { name, password, ingredients, title, content, category } = req.body;
 
-  const sql = `INSERT INTO writesub (name, password, ingredients, title, content, category, regdate) VALUES (?, ?, ?, ?, ?, ?, NOW())`;
+// 글쓰기
+app.post('/writesub', upload.single('contentimg'), async (req, res) => {
+  const { name, password, ingredients, title, content, category } = req.body;
+  const file = req.file;
+
+  let imagePath = null;
+  if (file) {
+    imagePath = file.path;
+  }
+
+  const sql = `INSERT INTO writesub (name, password, ingredients, title, content, category, imgpath, regdate) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())`;
   let conn;
   try {
     conn = await pool.getConnection();
-    await conn.query(sql, [name, password, ingredients, title, content, category]);
+    await conn.query(sql, [name, password, ingredients, title, content, category, imagePath]);
     console.log('글 등록', new Date().toLocaleString());
     res.send("<script>alert('글이 등록되었습니다'); location.href='/'</script>");
   } catch (err) {
