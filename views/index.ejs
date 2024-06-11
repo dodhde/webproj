@@ -43,7 +43,7 @@
                 <% posts.forEach(post => { %>
                     <div class="col-md-4">
                         <div class="card mb-4" onclick="location.href='/posts/view/<%= post.id %>'">
-                            <img src="<%= post.image ? post.image : 'https://via.placeholder.com/300' %>" class="card-img-top" alt="<%= post.title %>">
+                            <img src="<%= post.imgpath ? post.imgpath : 'https://via.placeholder.com/640x480' %>" class="card-img-top" alt="<%= post.title %>">
                             <div class="card-body">
                                 <h5 class="card-title">
                                     <%= post.title.length > 10 ? post.title.substring(0, 10) + ' ...' : post.title %>
